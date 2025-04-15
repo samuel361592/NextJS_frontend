@@ -1,21 +1,120 @@
 @import "tailwindcss";
 
+/* 預設樣式 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-light: #ffffff;
+  --foreground-light: #171717;
+  --background-dark: #0a0a0a;
+  --foreground-dark: #ededed;
+
+  --primary-color: #007bff;
+  --secondary-color: #f8f9fa;
+  --accent-color: #28a745;
+  --error-color: #dc3545;
 }
 
 /* 使用 Tailwind 提供的顏色 */
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--background-light);
+  color: var(--foreground-light);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode */
+/* 通用區域 */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground-light);
+  margin: 0;
+  padding: 0;
+}
+
+/* 顯示較輕的背景與較深的前景 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+}
+
+/* 卡片設計，保持整體清爽 */
+.card {
+  background-color: var(--background-light);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 錯誤訊息顯示 */
+.error {
+  color: var(--error-color);
+}
+
+/* Dark mode 設定 */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background-light: var(--background-dark);
+    --foreground-light: var(--foreground-dark);
+  }
+
+  body {
+    background-color: var(--background-dark);
+    color: var(--foreground-dark);
+  }
+
+  .container {
+    background-color: var(--background-dark);
+  }
+
+  .card {
+    background-color: var(--foreground-dark);
+    color: var(--foreground-light);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+  }
+
+  /* 針對暗色模式下的顏色優化 */
+  .error {
+    color: var(--error-color);
+  }
+}
+
+/* 增加按鈕樣式 */
+button {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--accent-color);
+}
+
+/* 輸入框設計 */
+input, textarea {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* 在暗色模式中調整輸入框 */
+@media (prefers-color-scheme: dark) {
+  input, textarea {
+    background-color: var(--background-dark);
+    color: var(--foreground-light);
   }
 }

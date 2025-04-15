@@ -44,21 +44,37 @@ export default function ProfilePage() {
     };
 
     return (
-        <div>
-            <h1>個人資料</h1>
-    
-            {loading ? (
-                <p>載入中...</p>
-            ) : user ? (
-                <>
-                    <p>姓名: {user.name}</p>
-                    <p>Email: {user.email}</p>
-                    <p>年齡: {user.age}</p>
-                    <button onClick={handleLogout}>登出</button>
-                </>
-            ) : (
-                <p>無法取得資料</p>
-            )}
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+                <h1 className="text-3xl font-semibold text-center mb-6 text-gray-800">個人資料</h1>
+
+                {loading ? (
+                    <p className="text-center text-gray-500">載入中...</p>
+                ) : user ? (
+                    <>
+                        <div className="space-y-4">
+                            <p className="text-lg text-gray-800">
+                                <span className="font-semibold">姓名: </span>{user.name}
+                            </p>
+                            <p className="text-lg text-gray-800">
+                                <span className="font-semibold">Email: </span>{user.email}
+                            </p>
+                            <p className="text-lg text-gray-800">
+                                <span className="font-semibold">年齡: </span>{user.age}
+                            </p>
+                        </div>
+                        <div className="mt-6 text-center">
+                            <button 
+                                onClick={handleLogout} 
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full">
+                                登出
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <p className="text-center text-red-500">無法取得資料</p>
+                )}
+            </div>
         </div>
     );
 }
