@@ -51,7 +51,7 @@ export default function Page() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     alert('已登出');
-    router.push('/');
+    window.location.href = '/';
   };
 
   const handleLoginRedirect = () => router.push('/login');

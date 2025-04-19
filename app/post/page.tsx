@@ -38,7 +38,7 @@ export default function PostPage() {
       
       if (res.ok) {
         alert('發文成功');
-        router.push('/');  // 跳轉到首頁
+        router.push('/');
         router.refresh();
       } else {
         alert('發文失敗：' + data.message);
