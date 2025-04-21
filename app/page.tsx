@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
+import { Post } from '@/types/post';
+import { User } from '@/types/user';
 
 export default function Page() {
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string; email: string; age: number } | null>(null);
-  const [posts, setPosts] = useState<Array<any>>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const shouldRefresh = searchParams.get('refresh') === 'true';
@@ -156,7 +158,7 @@ export default function Page() {
                     </small>
 
                     {/* 編輯 & 刪除按鈕 */}
-                    {user?.email === post.user.email && (
+                    {user?.email === post.user?.email && (
                       <div className="mt-2 flex space-x-2">
                         <button
                           onClick={() => router.push(`/post/edit/${post.id}`)}

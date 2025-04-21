@@ -15,8 +15,8 @@ export default function RegisterPage() {
     const [passwordStrength, setPasswordStrength] = useState('');
     const isValidEmail = (email: string) => {
         return /^\S+@\S+\.\S+$/.test(email);
-      };
-      
+    };
+
 
     const handleRegister = async () => {
         if (!email || !password || !name || !age) {
@@ -33,7 +33,7 @@ export default function RegisterPage() {
         if (!isValidEmail(email)) {
             alert('請輸入正確的 Email 格式');
             return;
-          }
+        }
 
         const res = await fetch('http://localhost:3001/auth/register', {
             method: 'POST',
@@ -96,6 +96,10 @@ export default function RegisterPage() {
                     {email.length > 0 && !isValidEmail(email) && (
                         <p className="text-red-600 text-sm mt-1">請輸入正確的 Email 格式</p>
                     )}
+
+                    {error && (
+                        <p className="text-red-600 text-sm mt-1">{error}</p>
+                    )}
                 </div>
 
                 <div className="mb-4">
@@ -133,6 +137,10 @@ export default function RegisterPage() {
                             setPasswordStrength(evaluatePasswordStrength(newPwd));
                         }}
                     />
+
+                    {passwordError && (
+                        <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+                    )}
 
                     {/* 密碼長度錯誤訊息 */}
                     {password.length > 0 && password.length < 8 && (

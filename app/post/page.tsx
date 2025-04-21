@@ -43,6 +43,7 @@ export default function PostPage() {
       } else {
         alert('發文失敗：' + data.message);
       }
+      // eslint-disable-next-line
     } catch (error) {
       alert('發生錯誤，請稍後再試');
     } finally {
