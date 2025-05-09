@@ -1,40 +1,40 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 export default function EditPostPage() {
   const router = useRouter();
   const { id } = useParams();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     fetch(`http://localhost:3001/posts/${id}`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setTitle(data.title);
         setContent(data.content);
       });
   }, [id]);
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`http://localhost:3001/posts/${id}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ title, content }),
     });
 
     if (res.ok) {
-      alert('更新成功');
-      router.push('/?refresh=true');
+      alert("更新成功");
+      router.push("/?refresh=true");
     } else {
-      alert('更新失敗');
+      alert("更新失敗");
     }
   };
 
@@ -45,14 +45,14 @@ export default function EditPostPage() {
         className="w-full mb-4 p-2 border rounded"
         placeholder="標題"
         value={title}
-        onChange={e => setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
       />
       <textarea
         className="w-full mb-4 p-2 border rounded"
         placeholder="內容"
         value={content}
         rows={6}
-        onChange={e => setContent(e.target.value)}
+        onChange={(e) => setContent(e.target.value)}
       />
       <button
         onClick={handleSubmit}

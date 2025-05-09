@@ -8,14 +8,13 @@
 
 frontend/ ├── app/ # App Router 頁面與邏輯 │ └── page.tsx # 預設頁面（可擴充） ├── public/ # 靜態資源 ├── .env.local # 前端環境變數（需手動建立） ├── tailwind.config.js # TailwindCSS 設定 ├── postcss.config.js # PostCSS 設定 ├── next.config.ts # Next.js 設定 ├── tsconfig.json # TypeScript 設定 ├── package.json # 套件與指令 └── README.md # 本說明檔
 
-
 ---
 
 ## ⚙️ 環境變數設定
 
 請在 `frontend/` 根目錄中建立 `.env.local` 檔案，填入：
 
-```env
+````env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 此設定讓前端可以透過 process.env.NEXT_PUBLIC_API_BASE_URL 呼叫 NestJS 後端 API。
 
@@ -23,23 +22,23 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
 ```bash
 npm install         # 安裝套件
 npm run dev         # 啟動本地開發伺服器（http://localhost:3000）
-```
+````
 
 已完成功能
- 使用者註冊
+使用者註冊
 
- 使用者登入
+使用者登入
 
- 串接後端 API 驗證 JWT Token
+串接後端 API 驗證 JWT Token
 
 待開發功能（Feature 1.1）
- 使用者角色管理
+使用者角色管理
 
- 帖文 CRUD 功能
+帖文 CRUD 功能
 
- 使用者列表與角色切換介面
+使用者列表與角色切換介面
 
- 前端權限控管
+前端權限控管
 
 🧑‍💻 作者
 由 Samuel 製作，用於練習 Fullstack 技術整合（NestJS + Next.js + TypeORM + MySQL）。

@@ -20,11 +20,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 /* 通用區域 */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--foreground-light);
   margin: 0;
   padding: 0;
@@ -97,7 +104,8 @@ button:hover {
 }
 
 /* 輸入框設計 */
-input, textarea {
+input,
+textarea {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
@@ -106,14 +114,16 @@ input, textarea {
   margin-bottom: 10px;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-color: var(--primary-color);
 }
 
 /* 在暗色模式中調整輸入框 */
 @media (prefers-color-scheme: dark) {
-  input, textarea {
+  input,
+  textarea {
     background-color: var(--background-dark);
     color: var(--foreground-light);
   }

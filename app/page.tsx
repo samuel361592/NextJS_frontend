@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
-import { Post } from '@/types/post';
-import { User } from '@/types/user';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { Post } from "@/types/post";
+import { User } from "@/types/user";
 
 export default function Page() {
   const router = useRouter();
@@ -12,19 +12,19 @@ export default function Page() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-  const shouldRefresh = searchParams.get('refresh') === 'true';
+  const shouldRefresh = searchParams.get("refresh") === "true";
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (token) {
-      fetch('http://localhost:3001/auth/profile', {
+      fetch("http://localhost:3001/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data.user) setUser(data.user);
         })
         .catch(() => setUser(null))
@@ -38,9 +38,9 @@ export default function Page() {
   }, [shouldRefresh]);
 
   const fetchPosts = () => {
-    fetch('http://localhost:3001/posts')
-      .then(res => res.json())
-      .then(data => {
+    fetch("http://localhost:3001/posts")
+      .then((res) => res.json())
+      .then((data) => {
         if (Array.isArray(data)) {
           setPosts(data);
         } else {
@@ -51,39 +51,39 @@ export default function Page() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    alert('已登出');
-    window.location.href = '/';
+    localStorage.removeItem("token");
+    alert("已登出");
+    window.location.href = "/";
   };
 
-  const handleLoginRedirect = () => router.push('/login');
-  const handleRegisterRedirect = () => router.push('/register');
+  const handleLoginRedirect = () => router.push("/login");
+  const handleRegisterRedirect = () => router.push("/register");
   const handlePostRedirect = () => {
-    if (user) router.push('/post');
-    else router.push('/login');
+    if (user) router.push("/post");
+    else router.push("/login");
   };
 
   const handleDelete = async (postId: number) => {
-    const confirmed = window.confirm('確定要刪除這篇貼文嗎？');
+    const confirmed = window.confirm("確定要刪除這篇貼文嗎？");
     if (!confirmed) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const res = await fetch(`http://localhost:3001/posts/${postId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (res.ok) {
-        alert('刪除成功');
-        fetchPosts(); // 重新載入貼文
+        alert("刪除成功");
+        fetchPosts();
       } else {
-        alert('刪除失敗');
+        alert("刪除失敗");
       }
     } catch (err) {
-      console.error('刪除時出錯:', err);
+      console.error("刪除時出錯:", err);
     }
   };
 
@@ -95,12 +95,28 @@ export default function Page() {
           <h2 className="text-white text-xl font-bold">社群平台</h2>
           <div className="flex space-x-4">
             {user ? (
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition"
-              >
-                登出
-              </button>
+              <>
+                <button
+                  onClick={() => router.push("/profile")}
+                  className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
+                >
+                  個人檔案
+                </button>
+                {user.roles?.includes("admin") && (
+                  <button
+                    onClick={() => router.push("/admin")}
+                    className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition"
+                  >
+                    管理後台
+                  </button>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition"
+                >
+                  登出
+                </button>
+              </>
             ) : (
               <>
                 <button
@@ -130,8 +146,6 @@ export default function Page() {
             {user && (
               <div className="mb-6">
                 <h1 className="text-2xl font-bold">歡迎回來, {user.name}</h1>
-                <p>Email: {user.email}</p>
-                <p>年齡: {user.age}</p>
               </div>
             )}
 
@@ -150,11 +164,17 @@ export default function Page() {
                 <p>目前沒有任何動態</p>
               ) : (
                 posts.map((post, index) => (
-                  <div className="post p-4 mb-4 bg-white rounded shadow" key={index}>
-                    <h3 className="text-lg font-medium">{post.title || '（無標題）'}</h3>
-                    <p className="mb-2">{post.content || '（無內容）'}</p>
+                  <div
+                    className="post p-4 mb-4 bg-white rounded shadow"
+                    key={index}
+                  >
+                    <h3 className="text-lg font-medium">
+                      {post.title || "（無標題）"}
+                    </h3>
+                    <p className="mb-2">{post.content || "（無內容）"}</p>
                     <small className="text-gray-500">
-                      發表者：{post.user?.name || '匿名'}（{post.user?.email || '無信箱'}）
+                      發表者：{post.user?.name || "匿名"}（
+                      {post.user?.email || "無信箱"}）
                     </small>
 
                     {/* 編輯 & 刪除按鈕 */}
@@ -174,7 +194,6 @@ export default function Page() {
                         </button>
                       </div>
                     )}
-
                   </div>
                 ))
               )}
