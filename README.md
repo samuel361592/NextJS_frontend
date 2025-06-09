@@ -8,15 +8,16 @@
 
 請在 `frontend/` 根目錄中建立 `.env.local` 檔案，填入：
 
-````env
+```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+```
 此設定讓前端可以透過 process.env.NEXT_PUBLIC_API_BASE_URL 呼叫 NestJS 後端 API。
 
 安裝與啟動
 ```bash
 npm install         # 安裝套件
 npm run dev         # 啟動本地開發伺服器（http://localhost:3000）
-````
+```
 
 已完成功能
 使用者註冊
