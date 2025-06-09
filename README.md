@@ -1,16 +1,10 @@
-# 🖥️ Frontend - Next.js + TailwindCSS
+# Frontend - Next.js + TailwindCSS
 
 本資料夾為 Fullstack 專案的前端部分，採用 Next.js App Router 架構，整合 TailwindCSS 做 UI 樣式設計，目前支援基本的使用者註冊與登入功能，並與 NestJS 後端 API 串接。
 
 ---
 
-## 📁 目錄結構
-
-frontend/ ├── app/ # App Router 頁面與邏輯 │ └── page.tsx # 預設頁面（可擴充） ├── public/ # 靜態資源 ├── .env.local # 前端環境變數（需手動建立） ├── tailwind.config.js # TailwindCSS 設定 ├── postcss.config.js # PostCSS 設定 ├── next.config.ts # Next.js 設定 ├── tsconfig.json # TypeScript 設定 ├── package.json # 套件與指令 └── README.md # 本說明檔
-
----
-
-## ⚙️ 環境變數設定
+## 環境變數設定
 
 請在 `frontend/` 根目錄中建立 `.env.local` 檔案，填入：
 
@@ -40,5 +34,5 @@ npm run dev         # 啟動本地開發伺服器（http://localhost:3000）
 
 前端權限控管
 
-🧑‍💻 作者
+作者
 由 Samuel 製作，用於練習 Fullstack 技術整合（NestJS + Next.js + TypeORM + MySQL）。
