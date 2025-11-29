@@ -1,103 +1,206 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { Post } from "@/types/post";
+import { User } from "@/types/user";
+
+export default function Page() {
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const shouldRefresh = searchParams.get("refresh") === "true";
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      fetch("http://localhost:3001/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) setUser(data.user);
+        })
+        .catch(() => setUser(null))
+        .finally(() => setLoading(false));
+    } else {
+      setUser(null);
+      setLoading(false);
+    }
+
+    fetchPosts();
+  }, [shouldRefresh]);
+
+  const fetchPosts = () => {
+    fetch("http://localhost:3001/posts")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPosts(data);
+        } else {
+          setPosts([]);
+        }
+      })
+      .catch(() => setPosts([]));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    alert("已登出");
+    window.location.href = "/";
+  };
+
+  const handleLoginRedirect = () => router.push("/login");
+  const handleRegisterRedirect = () => router.push("/register");
+  const handlePostRedirect = () => {
+    if (user) router.push("/post");
+    else router.push("/login");
+  };
+
+  const handleDelete = async (postId: number) => {
+    const confirmed = window.confirm("確定要刪除這篇貼文嗎？");
+    if (!confirmed) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:3001/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        alert("刪除成功");
+        fetchPosts();
+      } else {
+        alert("刪除失敗");
+      }
+    } catch (err) {
+      console.error("刪除時出錯:", err);
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-50">
+      {/* NavBar */}
+      <nav className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 p-4 shadow-lg rounded-b-lg">
+        <div className="flex justify-between items-center">
+          <h2 className="text-white text-xl font-bold">社群平台</h2>
+          <div className="flex space-x-4">
+            {user ? (
+              <>
+                <button
+                  onClick={() => router.push("/profile")}
+                  className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
+                >
+                  個人檔案
+                </button>
+                {user.roles?.includes("admin") && (
+                  <button
+                    onClick={() => router.push("/admin")}
+                    className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition"
+                  >
+                    管理後台
+                  </button>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition"
+                >
+                  登出
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={handleLoginRedirect}
+                  className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition"
+                >
+                  登入
+                </button>
+                <button
+                  onClick={handleRegisterRedirect}
+                  className="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition"
+                >
+                  註冊
+                </button>
+              </>
+            )}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </nav>
+
+      {/* 主頁內容 */}
+      <div className="container mx-auto p-6">
+        {loading ? (
+          <p>載入中...</p>
+        ) : (
+          <>
+            {user && (
+              <div className="mb-6">
+                <h1 className="text-2xl font-bold">歡迎回來, {user.name}</h1>
+              </div>
+            )}
+
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={handlePostRedirect}
+                className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+              >
+                發文
+              </button>
+            </div>
+
+            <div className="posts">
+              <h2 className="text-xl font-semibold mb-4">動態牆</h2>
+              {posts.length === 0 ? (
+                <p>目前沒有任何動態</p>
+              ) : (
+                posts.map((post, index) => (
+                  <div
+                    className="post p-4 mb-4 bg-white rounded shadow"
+                    key={index}
+                  >
+                    <h3 className="text-lg font-medium">
+                      {post.title || "（無標題）"}
+                    </h3>
+                    <p className="mb-2">{post.content || "（無內容）"}</p>
+                    <small className="text-gray-500">
+                      發表者：{post.user?.name || "匿名"}（
+                      {post.user?.email || "無信箱"}）
+                    </small>
+
+                    {/* 編輯 & 刪除按鈕 */}
+                    {user?.email === post.user?.email && (
+                      <div className="mt-2 flex space-x-2">
+                        <button
+                          onClick={() => router.push(`/post/edit/${post.id}`)}
+                          className="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                        >
+                          編輯
+                        </button>
+                        <button
+                          onClick={() => handleDelete(post.id)}
+                          className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                        >
+                          刪除
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
