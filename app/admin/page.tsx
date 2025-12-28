@@ -54,7 +54,7 @@ export default function AdminPage() {
       return;
     }
     const token = localStorage.getItem("token");
-    const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/users", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -92,7 +92,7 @@ export default function AdminPage() {
   };
 
   const fetchPosts = async () => {
-    const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/posts");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
     const data = await res.json();
     if (Array.isArray(data)) {
       setPostList(data);

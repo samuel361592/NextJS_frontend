@@ -20,7 +20,7 @@ export default function ProfilePage() {
       return;
     }
 
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/auth/profile", {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

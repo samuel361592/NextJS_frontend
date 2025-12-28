@@ -25,7 +25,7 @@ export default function PostPage() {
     }
 
     try {
-      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/posts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

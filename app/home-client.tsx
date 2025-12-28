@@ -18,7 +18,7 @@ export default function Page() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("${process.env.NEXT_PUBLIC_API_URL}/auth/profile", {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +38,7 @@ export default function Page() {
   }, [shouldRefresh]);
 
   const fetchPosts = () => {
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/posts")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {

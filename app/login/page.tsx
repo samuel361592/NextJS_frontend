@@ -10,7 +10,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleLogin = async () => {
-    const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/auth/login", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      const profileRes = await fetch("${process.env.NEXT_PUBLIC_API_URL}/auth/profile", {
+      const profileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${data.token}`,
