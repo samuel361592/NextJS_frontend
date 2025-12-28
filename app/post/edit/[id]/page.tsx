@@ -10,7 +10,7 @@ export default function EditPostPage() {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:3001/posts/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setTitle(data.title);
@@ -21,7 +21,7 @@ export default function EditPostPage() {
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`http://localhost:3001/posts/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

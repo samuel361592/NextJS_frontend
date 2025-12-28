@@ -54,7 +54,7 @@ export default function AdminPage() {
       return;
     }
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:3001/users", {
+    const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -73,7 +73,7 @@ export default function AdminPage() {
 
   const changeRole = async (userId: number, role: string) => {
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:3001/users/${userId}/role`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/role`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function AdminPage() {
   };
 
   const fetchPosts = async () => {
-    const res = await fetch("http://localhost:3001/posts");
+    const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/posts");
     const data = await res.json();
     if (Array.isArray(data)) {
       setPostList(data);
@@ -106,7 +106,7 @@ export default function AdminPage() {
     if (!confirmed) return;
 
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:3001/posts/${postId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${postId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

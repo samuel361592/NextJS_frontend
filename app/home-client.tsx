@@ -18,7 +18,7 @@ export default function Page() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:3001/auth/profile", {
+      fetch("${process.env.NEXT_PUBLIC_API_URL}/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +38,7 @@ export default function Page() {
   }, [shouldRefresh]);
 
   const fetchPosts = () => {
-    fetch("http://localhost:3001/posts")
+    fetch("${process.env.NEXT_PUBLIC_API_URL}/posts")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -69,7 +69,7 @@ export default function Page() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:3001/posts/${postId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
