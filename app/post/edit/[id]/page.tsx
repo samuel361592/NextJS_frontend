@@ -38,9 +38,10 @@ export default function EditPostPage() {
     }
   };
 
-  const handleback = () => {
+  const handleBack = () => {
     router.push("/");
   }
+
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4">編輯貼文</h1>
@@ -57,12 +58,21 @@ export default function EditPostPage() {
         rows={6}
         onChange={(e) => setContent(e.target.value)}
       />
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        更新貼文
-      </button>
+
+      <div className="flex gap-3">
+        <button
+          onClick={handleBack}
+          className="border px-4 py-2 rounded hover:bg-gray-50"
+        >
+          返回
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          更新貼文
+        </button>
+      </div>
     </div>
   );
 }
