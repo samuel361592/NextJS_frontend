@@ -38,6 +38,9 @@ export default function EditPostPage() {
     }
   };
 
+  const handleback = () => {
+    router.push("/");
+  }
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4">編輯貼文</h1>
