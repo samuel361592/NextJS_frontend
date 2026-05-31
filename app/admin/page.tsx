@@ -119,13 +119,15 @@ export default function AdminPage() {
 
   const changeRole = async (userId: number, role: string) => {
     const token = localStorage.getItem("token");
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/role`, {
+    const roleIds = role === "admin" ? [1] : [2];
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/roles`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ role }),
+      body: JSON.stringify({ roleIds }),
     });
 
     const data = await res.json();
