@@ -43,71 +43,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 justify-center items-center">
-      {/* NavBar */}
-      <nav
-        style={{
-          backgroundColor: "#4C8BF5",
-          padding: "10px",
-          position: "fixed",
-          top: 0,
-          width: "100%",
-          zIndex: 10,
-        }}
-      >
-        <Link
-          href="/"
-          style={{ color: "white", fontSize: "20px", fontWeight: "bold" }}
-        >
-          首頁
-        </Link>
-      </nav>
-
-      <div className="w-full max-w-md p-8 bg-white rounded shadow-md">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          登入
-        </h1>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Email
-          </label>
-          <input
-            type="email"
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            placeholder="example@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-600">
-            密碼
-          </label>
-          <input
-            type="password"
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            placeholder="請輸入密碼"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <button
-          onClick={handleLogin}
-          className="w-full py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded font-semibold transition"
-        >
-          登入
-        </button>
-
-        <p className="mt-4 text-sm text-center text-gray-500">
-          還沒有帳號？{" "}
-          <Link href="/register" className="text-indigo-600 hover:underline">
-            去註冊
+    <div className="auth-shell">
+      <div className="auth-card auth-card-compact">
+        <div className="auth-topline">
+          <Link href="/" className="auth-back">
+            回到主頁
           </Link>
+          <span className="auth-kicker">Welcome back</span>
+        </div>
+
+        <div className="auth-heading">
+          <h1 className="auth-title">登入</h1>
+          <p className="auth-copy">登入後即可查看動態牆、發文與管理自己的內容。</p>
+        </div>
+
+        <div className="form-grid">
+          <div>
+            <label className="input-label">Email</label>
+            <input
+              type="email"
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="input-label">密碼</label>
+            <input
+              type="password"
+              placeholder="請輸入密碼"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button onClick={handleLogin} className="button-primary auth-submit">
+            登入
+          </button>
+
+        </div>
+
+        <p className="auth-alt">
+          還沒有帳號？ <Link href="/register" className="auth-alt-link">去註冊</Link>
         </p>
       </div>
     </div>

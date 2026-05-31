@@ -170,63 +170,82 @@ export default function AdminPage() {
   };
 
   return (
-    <main className="p-6 max-w-6xl mx-auto bg-gray-50 min-h-screen">
-      {/* Header + 返回主頁 */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold text-gray-800">管理員後台</h1>
-        <button
-          onClick={() => router.push("/")}
-          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded shadow"
-        >
-          返回主頁
-        </button>
-      </div>
+    <main className="page-shell stack">
+      <section className="hero-card">
+        <div className="hero-layout">
+          <div className="stack">
+            <span className="eyebrow">Admin Console</span>
+            <h1 className="hero-title">管理員後台</h1>
+            {user && (
+              <p className="hero-copy">
+                您好，{user.name}（{user.email}）。這裡保留原本的管理流程，只把操作區整理得更清楚。
+              </p>
+            )}
+            <div className="hero-actions">
+              <button onClick={() => router.push("/")} className="button-ghost">
+                返回主頁
+              </button>
+            </div>
+          </div>
 
-      {user && (
-        <p className="text-gray-700 mb-8">
-          您好，<span className="font-semibold">{user.name}</span>（{user.email}
-          ）
-        </p>
-      )}
+          <div className="stack">
+            <div className="stat-grid">
+              <div className="stat-card">
+                <span>用戶數</span>
+                <strong>{userList.length}</strong>
+              </div>
+              <div className="stat-card">
+                <span>貼文數</span>
+                <strong>{postList.length}</strong>
+              </div>
+            </div>
+            <div className="info-card section-card">
+              <div className="badge">權限中心</div>
+              <p className="form-note" style={{ marginTop: "0.75rem" }}>
+                查詢、升降權與刪文操作維持原有行為。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* 用戶管理區塊 */}
-      <section className="bg-white p-6 rounded-lg shadow-md mb-10">
-        <h2 className="text-2xl font-semibold text-blue-700 mb-4">用戶管理</h2>
-        <button
-          onClick={fetchUsers}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded"
-        >
-          {showUsers ? "收起用戶列表" : "查詢所有用戶"}
-        </button>
+      <section className="section-card">
+        <div className="section-header">
+          <div className="stack" style={{ gap: "0.35rem" }}>
+            <span className="eyebrow">User Management</span>
+            <h2 className="section-title">用戶管理</h2>
+          </div>
+          <button onClick={fetchUsers} className="button-primary">
+            {showUsers ? "收起用戶列表" : "查詢所有用戶"}
+          </button>
+        </div>
 
-        {showUsers && (
-          <div className="mt-6 border-t pt-4 space-y-4">
-            <h3 className="text-lg font-bold">用戶列表</h3>
-            <ul className="space-y-3">
-              {userList.map((u) => (
-                <li
-                  key={u.id}
-                  className="p-4 border bg-gray-100 rounded flex flex-col md:flex-row md:items-center md:justify-between"
-                >
+        {showUsers ? (
+          <div className="stack">
+            {userList.map((u) => (
+              <article key={u.id} className="post-card">
+                <div className="section-header" style={{ marginBottom: "0.7rem" }}>
                   <div>
-                    <p className="text-lg font-medium">{u.name}</p>
-                    <p className="text-sm text-gray-600">{u.email}</p>
-                    <p className="text-sm">
-                      年齡：{u.age} ｜ 角色：{u.roles.join(", ")}
-                    </p>
+                    <h3 className="post-title" style={{ marginBottom: "0.25rem" }}>{u.name}</h3>
+                    <p className="meta" style={{ margin: 0 }}>{u.email}</p>
                   </div>
-                  <div className="mt-3 md:mt-0 flex gap-2">
+                  <div className="badge">年齡 {u.age}</div>
+                </div>
+
+                <div className="stack" style={{ gap: "0.75rem" }}>
+                  <p className="form-note" style={{ margin: 0 }}>
+                    角色：{u.roles.join(", ")}
+                  </p>
+                  <div className="inline-actions">
                     {u.id === user?.id ? (
-                      <span className="text-gray-400 text-sm">
-                        （無法更改自己）
-                      </span>
+                      <span className="badge">無法更改自己</span>
                     ) : u.roles.includes("admin") ? (
                       <button
                         onClick={() =>
                           confirm(`確定降級 ${u.name}？`) &&
                           changeRole(u.id, "user")
                         }
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                        className="button-danger"
                       >
                         降級為一般使用者
                       </button>
@@ -236,51 +255,49 @@ export default function AdminPage() {
                           confirm(`確定升級 ${u.name}？`) &&
                           changeRole(u.id, "admin")
                         }
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                        className="button-secondary"
                       >
                         升級為管理員
                       </button>
                     )}
                   </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </article>
+            ))}
           </div>
+        ) : (
+          <div className="empty-state">尚未載入用戶列表</div>
         )}
       </section>
 
-      {/* 貼文管理區塊 */}
-      <section className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-blue-700 mb-4">貼文管理</h2>
-        <button
-          onClick={() => setShowPosts((prev) => !prev)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded"
-        >
-          {showPosts ? "收起貼文列表" : "顯示所有貼文"}
-        </button>
+      <section className="section-card">
+        <div className="section-header">
+          <div className="stack" style={{ gap: "0.35rem" }}>
+            <span className="eyebrow">Post Management</span>
+            <h2 className="section-title">貼文管理</h2>
+          </div>
+          <button onClick={() => setShowPosts((prev) => !prev)} className="button-primary">
+            {showPosts ? "收起貼文列表" : "顯示所有貼文"}
+          </button>
+        </div>
 
-        {showPosts && (
-          <div className="mt-6 border-t pt-4 space-y-4">
-            <h3 className="text-lg font-bold mb-2">全部貼文列表</h3>
+        {showPosts ? (
+          <div className="stack">
             {postList.map((post) => (
-              <div
-                key={post.id}
-                className="p-4 border bg-gray-100 rounded shadow-sm"
-              >
-                <h4 className="text-lg font-semibold">{post.title}</h4>
-                <p className="text-gray-700">{post.content}</p>
-                <p className="text-sm text-gray-500 mt-1">
+              <article key={post.id} className="post-card">
+                <h3 className="post-title">{post.title}</h3>
+                <p className="post-content">{post.content}</p>
+                <p className="meta" style={{ marginTop: 0 }}>
                   作者：{post.user?.name}（{post.user?.email}）
                 </p>
-                <button
-                  onClick={() => deletePost(post.id)}
-                  className="mt-3 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                >
+                <button onClick={() => deletePost(post.id)} className="button-danger">
                   刪除貼文
                 </button>
-              </div>
+              </article>
             ))}
           </div>
+        ) : (
+          <div className="empty-state">尚未載入貼文列表</div>
         )}
       </section>
     </main>
