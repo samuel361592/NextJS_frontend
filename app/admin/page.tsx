@@ -37,21 +37,42 @@ export default function AdminPage() {
   const [showPosts, setShowPosts] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (!stored) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       router.push("/login");
       return;
     }
 
-    const parsed = JSON.parse(stored);
-    if (!parsed.roles || !parsed.roles.includes("admin")) {
-      alert("非管理員無法進入");
-      router.push("/");
-      return;
-    }
+    const verifyAdmin = async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    setUser(parsed);
-    fetchPosts();
+      if (!res.ok) {
+        alert("請重新登入");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        router.push("/login");
+        return;
+      }
+
+      const data = await res.json();
+      const currentUser = data.user;
+
+      if (!currentUser?.roles?.includes("admin")) {
+        alert("非管理員無法進入");
+        router.push("/");
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(currentUser));
+      setUser(currentUser);
+      fetchPosts();
+    };
+
+    verifyAdmin();
   }, [router]);
 
   const fetchUsers = async () => {
