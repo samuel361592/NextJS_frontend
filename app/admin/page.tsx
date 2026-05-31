@@ -24,6 +24,12 @@ export default function AdminPage() {
     };
   };
 
+  type ApiRole = string | { name?: string };
+
+  type ApiUser = Omit<User, "roles"> & {
+    roles?: ApiRole[];
+  };
+
   const [user, setUser] = useState<User | null>(null);
   const [userList, setUserList] = useState<User[]>([]);
   const [postList, setPostList] = useState<Post[]>([]);
@@ -60,13 +66,32 @@ export default function AdminPage() {
       },
     });
     const data = await res.json();
-    if (Array.isArray(data.users)) {
-      setUserList(data.users);
-    } else if (Array.isArray(data)) {
-      setUserList(data);
+
+    if (!res.ok) {
+      alert(data.message || "取得用戶資料失敗！");
+      setUserList([]);
+      return;
+    }
+
+    const users = Array.isArray(data.users)
+      ? data.users
+      : Array.isArray(data)
+        ? data
+        : null;
+
+    if (users) {
+      setUserList(
+        users.map((u: ApiUser) => ({
+          ...u,
+          roles: (u.roles ?? []).map((role) =>
+            typeof role === "string" ? role : role.name ?? "",
+          ),
+        })),
+      );
     } else {
       alert("取得的 user 資料不是陣列！");
       setUserList([]);
+      return;
     }
     setShowUsers(true);
   };
