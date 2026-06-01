@@ -9,6 +9,14 @@ export default function PostPage() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   const handlePostSubmit = async () => {
     if (!title || !content) {
       alert("標題和內容不能為空");
@@ -54,8 +62,14 @@ export default function PostPage() {
   return (
     <div className="page-shell" style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
       <div className="hero-card" style={{ width: "min(100%, 720px)" }}>
-        <div className="stack" style={{ marginBottom: "1.5rem" }}>
+        <div className="section-header" style={{ marginBottom: "1.25rem" }}>
+          <button onClick={handleBack} className="button-ghost" style={{ width: "auto" }}>
+            返回上一頁
+          </button>
           <span className="eyebrow">Compose</span>
+        </div>
+
+        <div className="stack" style={{ marginBottom: "1.5rem" }}>
           <h1 className="hero-title" style={{ fontSize: "2.2rem" }}>發表文章</h1>
           <p className="hero-copy">輸入標題與內容後送出，原本的發文流程沒有變動。</p>
         </div>
