@@ -43,35 +43,43 @@ export default function EditPostPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">編輯貼文</h1>
-      <input
-        className="w-full mb-4 p-2 border rounded"
-        placeholder="標題"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        className="w-full mb-4 p-2 border rounded"
-        placeholder="內容"
-        value={content}
-        rows={6}
-        onChange={(e) => setContent(e.target.value)}
-      />
+    <div className="page-shell" style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
+      <div className="hero-card" style={{ width: "min(100%, 720px)" }}>
+        <div className="stack" style={{ marginBottom: "1.5rem" }}>
+          <span className="eyebrow">Edit post</span>
+          <h1 className="hero-title" style={{ fontSize: "2.2rem" }}>編輯貼文</h1>
+          <p className="hero-copy">修改標題與內容後更新，原本的資料流程維持不變。</p>
+        </div>
 
-      <div className="flex gap-3">
-        <button
-          onClick={handleBack}
-          className="border px-4 py-2 rounded hover:bg-gray-50"
-        >
-          返回
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          更新貼文
-        </button>
+        <div className="form-grid">
+          <div>
+            <label className="input-label">標題</label>
+            <input
+              placeholder="標題"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="input-label">內容</label>
+            <textarea
+              placeholder="內容"
+              value={content}
+              rows={8}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+
+          <div className="inline-actions">
+            <button onClick={handleBack} className="button-ghost">
+              返回
+            </button>
+            <button onClick={handleSubmit} className="button-primary">
+              更新貼文
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

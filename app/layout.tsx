@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "社群平台",
-  description: "練習專案Demo",
+  title: "社群平台 | Social Hub",
+  description: "一個具備發文、個人資料與管理功能的社群平台介面",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="app-shell">{children}</div>
       </body>
     </html>
   );

@@ -34,19 +34,28 @@ export default function RegisterPage() {
       return;
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, name, age: Number(age) }),
-    });
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name, age: Number(age) }),
+      });
 
-    const data = await res.json();
-    console.log("register result", data);
-    if (res.ok) {
-      alert("註冊成功，請重新登入");
-      router.push("/login");
-    } else {
-      alert(data.message || "註冊失敗");
+      const data = await res.json();
+      console.error("register result", data);
+      if (res.ok) {
+        alert("註冊成功，請重新登入");
+        router.push("/login");
+      } else {
+        // 暫時在頁面上顯示後端回傳完整錯誤，方便除錯
+        setError(typeof data === "object" ? JSON.stringify(data, null, 2) : String(data));
+        // 也在 alert 中顯示簡短提示
+        alert(data.message || "註冊失敗（檢查 console 與畫面上的錯誤資訊）");
+      }
+    } catch (err) {
+      console.error("register fetch error", err);
+      setError(String(err));
+      alert("網路或其他錯誤，請檢查 console 與後端服務是否運作");
     }
   };
 
@@ -63,138 +72,127 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 justify-center items-center">
-      {/* NavBar */}
-      <nav
-        style={{
-          backgroundColor: "#4C8BF5",
-          padding: "10px",
-          position: "fixed",
-          top: 0,
-          width: "100%",
-          zIndex: 10,
-        }}
-      >
-        <Link
-          href="/"
-          style={{ color: "white", fontSize: "20px", fontWeight: "bold" }}
-        >
-          首頁
-        </Link>
-      </nav>
-
-      <div className="w-full max-w-md p-8 bg-white rounded shadow-md">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          註冊帳號
-        </h1>
-
-        <div className="mb-4">
-          <label className="block text-sm text-gray-700">姓名</label>
-          <input
-            type="text"
-            placeholder="請輸入姓名"
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm text-gray-700">Email</label>
-          <input
-            type="email"
-            placeholder="example@email.com"
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          {email.length > 0 && !isValidEmail(email) && (
-            <p className="text-red-600 text-sm mt-1">請輸入正確的 Email 格式</p>
-          )}
-
-          {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm text-gray-700">年齡</label>
-          <input
-            type="number"
-            placeholder="請輸入年齡"
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            value={age}
-            onChange={(e) => setAge(parseInt(e.target.value) || "")}
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm text-gray-700">密碼</label>
-          <input
-            type="password"
-            placeholder="密碼"
-            className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            value={password}
-            onChange={(e) => {
-              const newPwd = e.target.value;
-              setPassword(newPwd);
-
-              // 密碼長度錯誤提示
-              if (newPwd.length < 8) {
-                setPasswordError("密碼太短，至少需要 8 個字元");
-              } else if (newPwd.length > 60) {
-                setPasswordError("密碼太長，不能超過 60 個字元");
-              } else {
-                setPasswordError("");
-              }
-
-              // 即時計算強度
-              setPasswordStrength(evaluatePasswordStrength(newPwd));
-            }}
-          />
-
-          {passwordError && (
-            <p className="text-red-600 text-sm mt-1">{passwordError}</p>
-          )}
-
-          {/* 密碼強度條顯示 */}
-          {password && (
-            <div className="mt-2">
-              <p className="text-xs text-gray-600">
-                密碼強度：{passwordStrength}
-              </p>
-              <div className="w-full h-2 bg-gray-200 rounded mt-1">
-                <div
-                  className={`
-                                        h-full rounded transition-all duration-300
-                                        ${
-                                          passwordStrength === "強"
-                                            ? "w-full bg-green-500"
-                                            : passwordStrength === "中"
-                                              ? "w-2/3 bg-orange-400"
-                                              : "w-1/3 bg-red-500"
-                                        }
-                                            `}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        <button
-          onClick={handleRegister}
-          disabled={
-            !isValidEmail(email) || password.length < 8 || password.length > 60
-          }
-          className="w-full py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded font-semibold transition"
-        >
-          註冊
-        </button>
-
-        <p className="mt-4 text-sm text-center text-gray-500">
-          已有帳號？{" "}
-          <Link href="/login" className="text-indigo-600 hover:underline">
-            去登入
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="auth-topline">
+          <Link href="/" className="auth-back">
+            回到主頁
           </Link>
+          <span className="auth-kicker">Create account</span>
+        </div>
+
+        <div className="auth-heading">
+          <h1 className="auth-title">註冊帳號</h1>
+          <p className="auth-copy">建立資料後即可登入，功能流程維持原樣，只有視覺重新整理。</p>
+        </div>
+
+        <div className="form-grid">
+          <div>
+            <label className="input-label">姓名</label>
+            <input
+              type="text"
+              placeholder="請輸入姓名"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="input-label">Email</label>
+            <input
+              type="email"
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {email.length > 0 && !isValidEmail(email) && (
+              <p className="helper" style={{ color: "var(--danger)", marginTop: "0.5rem" }}>
+                請輸入正確的 Email 格式
+              </p>
+            )}
+            {error && <p className="helper" style={{ color: "var(--danger)", marginTop: "0.5rem" }}>{error}</p>}
+          </div>
+
+          <div>
+            <label className="input-label">年齡</label>
+            <input
+              type="number"
+              placeholder="請輸入年齡"
+              value={age}
+              onChange={(e) => setAge(parseInt(e.target.value) || "")}
+            />
+          </div>
+
+          <div>
+            <label className="input-label">密碼</label>
+            <input
+              type="password"
+              placeholder="密碼"
+              value={password}
+              onChange={(e) => {
+                const newPwd = e.target.value;
+                setPassword(newPwd);
+
+                if (newPwd.length < 8) {
+                  setPasswordError("密碼太短，至少需要 8 個字元");
+                } else if (newPwd.length > 60) {
+                  setPasswordError("密碼太長，不能超過 60 個字元");
+                } else {
+                  setPasswordError("");
+                }
+
+                setPasswordStrength(evaluatePasswordStrength(newPwd));
+              }}
+            />
+
+            {passwordError && (
+              <p className="helper" style={{ color: "var(--danger)", marginTop: "0.5rem" }}>
+                {passwordError}
+              </p>
+            )}
+
+            {password && (
+              <div className="stack" style={{ gap: "0.5rem", marginTop: "0.75rem" }}>
+                <p className="form-note">密碼強度：{passwordStrength}</p>
+                <div style={{ width: "100%", height: "0.65rem", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px", overflow: "hidden" }}>
+                  <div
+                    style={{
+                      height: "100%",
+                      borderRadius: "999px",
+                      transition: "width 300ms ease",
+                      width:
+                        passwordStrength === "強"
+                          ? "100%"
+                          : passwordStrength === "中"
+                            ? "66%"
+                            : "33%",
+                      background:
+                        passwordStrength === "強"
+                          ? "linear-gradient(90deg, #16a34a, #22c55e)"
+                          : passwordStrength === "中"
+                            ? "linear-gradient(90deg, #f59e0b, #fb923c)"
+                            : "linear-gradient(90deg, #ef4444, #f97316)",
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={handleRegister}
+            disabled={
+              !isValidEmail(email) || password.length < 8 || password.length > 60
+            }
+            className="button-primary auth-submit"
+          >
+            註冊
+          </button>
+
+        </div>
+
+        <p className="auth-alt">
+          已有帳號？ <Link href="/login" className="auth-alt-link">去登入</Link>
         </p>
       </div>
     </div>

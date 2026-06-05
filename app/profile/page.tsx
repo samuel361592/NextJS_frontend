@@ -49,55 +49,65 @@ export default function ProfilePage() {
   const isAdmin = user?.roles?.includes("admin");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md space-y-6">
-        <h1 className="text-3xl font-bold text-center text-gray-800">
-          個人資料
-        </h1>
+    <main className="profile-shell">
+      <section className="profile-card">
+        <div className="profile-cover">
+          <button onClick={handleBack} className="button-ghost profile-back">
+            返回
+          </button>
+          <div className="profile-cover-copy">
+            <span className="eyebrow">Account</span>
+            <h1>帳號資料</h1>
+          </div>
+        </div>
 
         {loading ? (
-          <p className="text-center text-gray-500">載入中...</p>
+          <div className="profile-body">
+            <div className="empty-state">載入中...</div>
+          </div>
         ) : user ? (
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <span className="font-semibold w-20">姓名：</span>
-              <span>{user.name}</span>
-            </div>
-
-            <div className="flex items-center">
-              <span className="font-semibold w-20">Email：</span>
-              <span>{user.email}</span>
-            </div>
-
-            <div className="flex items-center">
-              <span className="font-semibold w-20">年齡：</span>
-              <span>{user.age}</span>
-            </div>
-
-            <div className="flex items-center">
-              <span className="font-semibold w-20">身份：</span>
+          <>
+            <div className="profile-summary">
+              <div className="avatar profile-avatar">{user.name?.charAt(0).toUpperCase() || "U"}</div>
+              <div>
+                <h1 className="profile-title">{user.name}</h1>
+                <p className="profile-subtitle">{user.email}</p>
+              </div>
               <span
-                className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${
-                  isAdmin
-                    ? "bg-red-100 text-red-700"
-                    : "bg-blue-100 text-blue-700"
-                }`}
+                className="badge profile-role"
+                style={{ background: isAdmin ? "rgba(220, 38, 38, 0.1)" : "rgba(37, 99, 235, 0.1)", color: isAdmin ? "var(--danger)" : "var(--primary-strong)" }}
               >
                 {isAdmin ? "管理員 (Admin)" : "一般使用者"}
               </span>
             </div>
 
-            <button
-              onClick={handleBack}
-              className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition"
-            >
-              返回
-            </button>
-          </div>
+            <div className="profile-body">
+              <div className="profile-grid">
+                <div className="profile-field">
+                  <span>姓名</span>
+                  <strong>{user.name}</strong>
+                </div>
+                <div className="profile-field">
+                  <span>Email</span>
+                  <strong>{user.email}</strong>
+                </div>
+                <div className="profile-field">
+                  <span>年齡</span>
+                  <strong>{user.age}</strong>
+                </div>
+                <div className="profile-field">
+                  <span>帳號身份</span>
+                  <strong>{isAdmin ? "Admin" : "Member"}</strong>
+                </div>
+              </div>
+            </div>
+          </>
         ) : (
-          <p className="text-center text-red-500">無法取得資料</p>
+          <div className="profile-body">
+            <div className="empty-state" style={{ color: "var(--danger)" }}>無法取得資料</div>
+          </div>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
