@@ -154,7 +154,7 @@ export default function AdminPage() {
     if (!confirmed) return;
 
     const token = localStorage.getItem("token");
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${postId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
